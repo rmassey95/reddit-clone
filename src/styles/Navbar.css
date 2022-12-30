@@ -84,7 +84,11 @@
 }
 
 .login-button {
+  text-align: center;
+  text-decoration: none;
+  display: block;
   height: 33px;
+  line-height: 33px;
   width: 118px;
   border-radius: 25px;
   border: none;
@@ -96,5 +100,4 @@
 
 .login-button:hover {
   background-color: rgb(245, 69, 0);
-  cursor: pointer;
 }

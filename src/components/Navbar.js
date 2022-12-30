@@ -27,9 +27,9 @@ const Navbar = () => {
           </form>
         </div>
         <div className="login-container">
-          <button type="button" className="login-button">
+          <a href="/login" type="button" className="login-button">
             Log In
-          </button>
+          </a>
         </div>
       </header>
     </div>
