@@ -1,7 +1,7 @@
 import { React } from "react";
 import "../styles/Navbar.css";
-import logo from "../assets/reddit-logo.png";
-import searchIcon from "../assets/search-icon.png";
+import logo from "../assets/imgs/reddit-logo.png";
+import searchIcon from "../assets/imgs/search-icon.png";
 
 const Navbar = () => {
   return (
