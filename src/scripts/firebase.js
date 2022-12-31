@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDDEhfEXVUOnHt1fKaKSk3IhnHrR2QxrQc",
@@ -14,11 +14,4 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 const db = getDatabase();
 
-const getData = async () => {
-  const data = ref(db, "posts");
-  onValue(data, (snapshot) => {
-    return snapshot.val();
-  });
-};
-
-export default getData;
+export { db };
