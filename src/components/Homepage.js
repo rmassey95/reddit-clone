@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import Navbar from "./Navbar";
 import "../styles/Homepage.css";
 import hotSymbol from "../assets/imgs/top-symbol.png";
 import newSymbol from "../assets/imgs/new-symbol.png";
@@ -10,7 +9,7 @@ import share from "../assets/imgs/share.png";
 import { db } from "../scripts/firebase";
 import { ref, onValue } from "firebase/database";
 
-const Homepage = () => {
+const Homepage = ({ loggedIn }) => {
   const [posts, setPosts] = useState([]);
 
   const getData = () => {
@@ -27,14 +26,19 @@ const Homepage = () => {
   if (posts) {
     return (
       <div>
-        <Navbar />
         <div className="main-container">
           <div className="post-container">
             <div className="topbar create-btn-main">
               <div className="create-btn-container">
-                <a className="create-btn" href="/create">
-                  Create Post
-                </a>
+                {loggedIn ? (
+                  <a className="create-btn" href="/create">
+                    Create Post
+                  </a>
+                ) : (
+                  <span className="login-to-create-post">
+                    Login to Create a Post
+                  </span>
+                )}
               </div>
             </div>
 

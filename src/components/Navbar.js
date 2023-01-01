@@ -1,28 +1,9 @@
 import { React } from "react";
-import { useState } from "react";
 import "../styles/Navbar.css";
 import logo from "../assets/imgs/reddit-logo.png";
 import searchIcon from "../assets/imgs/search-icon.png";
-import {
-  signInUser,
-  isUserSignedIn,
-  signOutUser,
-  getUserName,
-} from "../scripts/firebase";
 
-const Navbar = () => {
-  const [loggedIn, setLoggedIn] = useState(isUserSignedIn);
-
-  const signOut = () => {
-    signOutUser();
-    setLoggedIn(false);
-  };
-
-  const signIn = () => {
-    signInUser();
-    setLoggedIn(true);
-  };
-
+const Navbar = ({ loggedIn, signOut, signIn }) => {
   return (
     <div className="navbar">
       <header className="navbar-container">
