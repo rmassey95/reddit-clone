@@ -5,6 +5,7 @@ import { db } from "../scripts/firebase";
 import { ref, set } from "firebase/database";
 import uniqid from "uniqid";
 import { useNavigate } from "react-router-dom";
+import { getUserName } from "../scripts/firebase";
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const CreatePost = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     set(ref(db, "posts/" + uniqid()), {
-      user: "Ryan",
+      user: getUserName(),
       title: e.target[0].value,
       subreddit: e.target[1].value,
       content: e.target[2].value,
