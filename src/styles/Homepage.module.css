@@ -1,4 +1,4 @@
-.main-container {
+.mainContainer {
   width: 100%;
   min-height: 100vh;
   display: inline-block;
@@ -7,14 +7,9 @@
   justify-content: center;
 }
 
-.post-container {
+.postContainer {
   width: 624px;
   padding: 20px 24px 20px 24px;
-}
-
-.popular-posts {
-  padding-bottom: 10px;
-  color: #1a1a1b;
 }
 
 .topbar {
@@ -26,7 +21,7 @@
   display: flex;
 }
 
-.topbar-button {
+.topbarButton {
   text-decoration: none;
   color: rgb(135, 138, 140);
   font-weight: bold;
@@ -36,21 +31,27 @@
   gap: 6px;
 }
 
-.topbar-button-container:hover {
+.topbarButtonContainer {
+  padding: 6px 8px 6px 8px;
+  margin-right: 16px;
+  height: 20px;
+}
+
+.topbarButtonContainer:hover {
   border-radius: 20px;
   background-color: #e2e7e9;
 }
 
-.create-btn-container {
+.createBtnMain {
+  justify-content: center;
+}
+
+.createBtnContainer {
   width: 90%;
   text-align: center;
 }
 
-.create-btn-main {
-  justify-content: center;
-}
-
-.create-btn {
+.createBtn {
   display: block;
   line-height: 32px;
   background-color: rgb(0, 121, 211);
@@ -60,17 +61,11 @@
   text-decoration: none;
 }
 
-.create-btn:hover {
+.createBtn:hover {
   background-color: rgb(0, 110, 211);
 }
 
-.topbar-button-container {
-  padding: 6px 8px 6px 8px;
-  margin-right: 16px;
-  height: 20px;
-}
-
-.topbar-symbol {
+.topbarSymbol {
   height: 20px;
   width: 20px;
 }
@@ -97,26 +92,29 @@
   padding-bottom: 8px;
 }
 
-.up-arrow,
-.down-arrow {
+.upArrow,
+.downArrow {
   width: 20px;
+  padding: 0;
   text-align: center;
-  text-decoration: none;
+  border: none;
+  background-color: rgba(255, 255, 255, 0);
   color: grey;
   font-size: 20px;
 }
 
-.up-arrow:hover,
-.down-arrow:hover {
+.upArrow:hover,
+.downArrow:hover {
   background-color: #e2e7e9;
   border-radius: 5px;
+  cursor: pointer;
 }
 
-.up-arrow:hover {
+.upArrow:hover {
   color: rgb(255, 69, 0);
 }
 
-.down-arrow:hover {
+.downArrow:hover {
   color: rgb(0, 110, 211);
 }
 
@@ -126,36 +124,31 @@
   padding-top: 8px;
 }
 
-.post-info {
+.postInfo {
   display: flex;
   gap: 6px;
   margin: 0 8px 8px 8px;
   font-size: 15px;
 }
 
-.user-date,
+.userDate,
 .dot {
   color: rgb(120, 124, 126);
 }
 
-.post-title {
+.postTitle {
   margin-left: 8px;
   margin-right: 8px;
   font-weight: 600;
   font-size: 18px;
 }
 
-.post-content {
+.postContent {
   margin-top: 8px;
   padding: 5px 8px 10px 8px;
 }
 
-.content-enter {
-  color: black;
-  text-decoration: none;
-}
-
-.content-link {
+.contentLink {
   color: rgb(135, 138, 140);
   text-decoration: none;
   padding: 8px;
@@ -164,12 +157,12 @@
   align-items: center;
 }
 
-.content-link:hover {
+.contentLink:hover {
   background-color: #e2e7e9;
   border-radius: 2px;
 }
 
-.post-links {
+.postLinks {
   height: 40px;
   width: 100%;
   display: flex;
@@ -178,11 +171,11 @@
   gap: 5px;
 }
 
-.post-link-img {
+.postLinkImg {
   height: 20px;
   width: 20px;
 }
 
-.login-to-create-post {
+.loginToCreatePost {
   line-height: 32px;
 }

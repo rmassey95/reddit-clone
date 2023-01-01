@@ -4,6 +4,7 @@ import Homepage from "./components/Homepage";
 import Subreddit from "./components/Subreddit";
 import CreatePost from "./components/CreatePost";
 import Navbar from "./components/Navbar";
+import Post from "./components/Post";
 import "./styles/index.css";
 import {
   signInUser,
@@ -66,6 +67,10 @@ const RouteSwitch = () => {
         <Route
           path="/create"
           element={<CreatePost loggedIn={loggedIn} getData={getData} />}
+        />
+        <Route
+          path="/post/:id"
+          element={<Post posts={posts} loggedIn={loggedIn} getData={getData} />}
         />
       </Routes>
     </BrowserRouter>

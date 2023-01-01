@@ -1,38 +1,42 @@
 import { React } from "react";
-import "../styles/Navbar.css";
+import styles from "../styles/Navbar.module.css";
 import logo from "../assets/imgs/reddit-logo.png";
 import searchIcon from "../assets/imgs/search-icon.png";
 
 const Navbar = ({ loggedIn, signOut, signIn }) => {
   return (
-    <div className="navbar">
-      <header className="navbar-container">
-        <a className="logo-button" type="button" href="/">
-          <div className="logo">
-            <img src={logo} alt="Reddit logo" className="logo-img" />
-            <p className="logo-text">reddit</p>
+    <div className={styles.navbar}>
+      <header className={styles.navbarContainer}>
+        <a className={styles.logoBtn} type="button" href="/">
+          <div className={styles.logoDiv}>
+            <img src={logo} alt="Reddit logo" className={styles.logoImg} />
+            <p className={styles.logoText}>reddit</p>
           </div>
         </a>
-        <div className="search-bar-container">
-          <form className="search-form">
-            <label htmlFor="search" className="search-label">
-              <img className="search-icon" src={searchIcon} alt="Search icon" />
+        <div className={styles.searchBarContainer}>
+          <form className={styles.searchForm}>
+            <label htmlFor="search" className={styles.searchLabel}>
+              <img
+                className={styles.searchIconImg}
+                src={searchIcon}
+                alt="Search icon"
+              />
             </label>
             <input
               id="search"
               type="search"
-              className="search-bar"
+              className={styles.searchBar}
               placeholder="Search Reddit"
             ></input>
           </form>
         </div>
-        <div className="login-container">
+        <div>
           {loggedIn ? (
-            <button onClick={signOut} type="button" className="login-button">
+            <button onClick={signOut} type="button" className={styles.loginBtn}>
               Log Out
             </button>
           ) : (
-            <button onClick={signIn} type="button" className="login-button">
+            <button onClick={signIn} type="button" className={styles.loginBtn}>
               Log In
             </button>
           )}

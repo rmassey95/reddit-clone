@@ -1,12 +1,19 @@
 import React from "react";
-import "../styles/Homepage.css";
+import styles from "../styles/Homepage.module.css";
 import hotSymbol from "../assets/imgs/top-symbol.png";
 import newSymbol from "../assets/imgs/new-symbol.png";
 import topSymbol from "../assets/imgs/top-symbol.png";
 import comments from "../assets/imgs/comments.png";
 import share from "../assets/imgs/share.png";
+import { useNavigate } from "react-router-dom";
 
 const Homepage = ({ loggedIn, posts }) => {
+  const navigate = useNavigate();
+
+  const postClicked = (postKey) => {
+    navigate(`/post/${postKey}`);
+  };
+
   const calcTimeFromPost = (datePosted) => {
     const dateNow = new Date();
     let difference = dateNow - datePosted;
@@ -16,54 +23,54 @@ const Homepage = ({ loggedIn, posts }) => {
       return `${timeBetween} days ago`;
     } else {
       timeBetween = Math.ceil(difference / (60 * 60 * 1000));
-      return `${timeBetween} hours ago`;
+      return `${timeBetween} hr. ago`;
     }
   };
 
   if (posts) {
     return (
       <div>
-        <div className="main-container">
-          <div className="post-container">
-            <div className="topbar create-btn-main">
-              <div className="create-btn-container">
+        <div className={styles.mainContainer}>
+          <div className={styles.postContainer}>
+            <div className={`${styles.topbar} ${styles.createBtnMain}`}>
+              <div className={styles.createBtnContainer}>
                 {loggedIn ? (
-                  <a className="create-btn" href="/create">
+                  <a className={styles.createBtn} href="/create">
                     Create Post
                   </a>
                 ) : (
-                  <span className="login-to-create-post">
+                  <span className={styles.loginToCreatePost}>
                     Login to Create a Post
                   </span>
                 )}
               </div>
             </div>
 
-            <div className="topbar">
-              <div className="topbar-button-container">
-                <a className="topbar-button" href="/hot">
+            <div className={styles.topbar}>
+              <div className={styles.topbarButtonContainer}>
+                <a className={styles.topbarButton} href="/hot">
                   <img
-                    className="topbar-symbol"
+                    className={styles.topbarSymbol}
                     src={hotSymbol}
                     alt="hot symbol"
                   />
                   Hot
                 </a>
               </div>
-              <div className="topbar-button-container">
-                <a className="topbar-button" href="/new">
+              <div className={styles.topbarButtonContainer}>
+                <a className={styles.topbarButton} href="/new">
                   <img
-                    className="topbar-symbol"
+                    className={styles.topbarSymbol}
                     src={newSymbol}
                     alt="new symbol"
                   />
                   New
                 </a>
               </div>
-              <div className="topbar-button-container">
-                <a className="topbar-button" href="/top">
+              <div className={styles.topbarButtonContainer}>
+                <a className={styles.topbarButton} href="/top">
                   <img
-                    className="topbar-symbol"
+                    className={styles.topbarSymbol}
                     src={topSymbol}
                     alt="top symbol"
                   />
@@ -74,35 +81,41 @@ const Homepage = ({ loggedIn, posts }) => {
 
             {Object.keys(posts).map((postKey) => {
               return (
-                <div className="post" key={postKey}>
-                  <div className="upvotes">
-                    <a className="up-arrow" href="/">
-                      &#8679;
-                    </a>
+                <div className={styles.post} key={postKey}>
+                  <div className={styles.upvotes}>
+                    <button className={styles.upArrow}>&#8679;</button>
                     <span>{posts[postKey].upvotes}</span>
-                    <a className="down-arrow" href="/">
-                      &#8681;
-                    </a>
+                    <button className={styles.downArrow}>&#8681;</button>
                   </div>
-                  <div className="content">
-                    <div className="post-info">
+                  <div className={styles.content}>
+                    <div className={styles.postInfo}>
                       <span>r/{posts[postKey].subreddit}</span>
-                      <span className="dot">&bull;</span>
-                      <span className="user-date">
+                      <span className={styles.dot}>&bull;</span>
+                      <span className={styles.userDate}>
                         Posted by {posts[postKey].user}{" "}
                         {calcTimeFromPost(posts[postKey].datePosted)}
                       </span>
                     </div>
-                    <div className="post-title">
+                    <div
+                      className={styles.postTitle}
+                      onClick={() => {
+                        postClicked(postKey);
+                      }}
+                    >
                       <span>{posts[postKey].title}</span>
                     </div>
-                    <div className="post-content">
+                    <div
+                      className={styles.postContent}
+                      onClick={() => {
+                        postClicked(postKey);
+                      }}
+                    >
                       <span>{posts[postKey].content}</span>
                     </div>
-                    <div className="post-links">
-                      <a className="content-link" href="/comments">
+                    <div className={styles.postLinks}>
+                      <a className={styles.contentLink} href="/comments">
                         <img
-                          className="post-link-img"
+                          className={styles.postLinkImg}
                           src={comments}
                           alt="comments button"
                         />
@@ -112,9 +125,9 @@ const Homepage = ({ loggedIn, posts }) => {
                             } Comments`
                           : "Comment"}
                       </a>
-                      <a className="content-link" href="/share">
+                      <a className={styles.contentLink} href="/share">
                         <img
-                          className="post-link-img"
+                          className={styles.postLinkImg}
                           src={share}
                           alt="share button"
                         />

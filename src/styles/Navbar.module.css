@@ -5,17 +5,17 @@
   width: 100vw;
 }
 
-.logo-img {
+.logoImg {
   height: 32px;
   width: 32px;
 }
 
-.logo-button {
+.logoBtn {
   text-decoration: none;
   color: black;
 }
 
-.navbar-container {
+.navbarContainer {
   padding-left: 20px;
   padding-right: 20px;
   height: 100%;
@@ -24,13 +24,13 @@
   justify-content: space-between;
 }
 
-.logo {
+.logoDiv {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.logo-text {
+.logoText {
   display: inline;
   margin: 0;
   font-size: 22px;
@@ -38,7 +38,7 @@
   font-family: sans-serif, Arial, Helvetica;
 }
 
-.search-bar-container {
+.searchBarContainer {
   height: 40px;
   width: 656px;
   border: 1px solid rgb(234, 234, 235);
@@ -48,30 +48,30 @@
   background-color: rgb(246, 247, 248);
 }
 
-.search-bar-container:hover {
+.searchBarContainer:hover {
   border: 1px solid rgb(95, 95, 253);
   background-color: white;
 }
 
-.search-form {
+.searchForm {
   height: 20px;
   width: 100%;
   display: flex;
   align-items: center;
 }
 
-.search-icon,
-.search-label {
+.searchIconImg,
+.searchLabel {
   height: 20px;
   width: 20px;
 }
 
-.search-label {
+.searchLabel {
   padding-left: 15px;
   padding-right: 9px;
 }
 
-.search-bar {
+.searchBar {
   border: none;
   font-size: 14px;
   font-weight: lighter;
@@ -83,7 +83,7 @@
   margin-right: 16px;
 }
 
-.login-button {
+.loginBtn {
   text-align: center;
   text-decoration: none;
   display: block;
@@ -98,6 +98,7 @@
   font-weight: 600;
 }
 
-.login-button:hover {
-  background-color: rgb(245, 69, 0);
+.loginBtn:hover {
+  background-color: rgb(230, 69, 0);
+  cursor: pointer;
 }

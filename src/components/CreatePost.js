@@ -1,5 +1,5 @@
 import { React } from "react";
-import "../styles/CreatePost.css";
+import styles from "../styles/CreatePost.module.css";
 import { db } from "../scripts/firebase";
 import { ref, set } from "firebase/database";
 import uniqid from "uniqid";
@@ -27,29 +27,33 @@ const CreatePost = ({ loggedIn, getData }) => {
   if (loggedIn) {
     return (
       <div>
-        <div className="main-container">
+        <div className={styles.mainContainer}>
           <h2>Create a Post</h2>
           <form
-            className="form"
+            className={styles.form}
             onSubmit={(e) => {
               handleSubmit(e);
             }}
           >
-            <div className="input-div">
-              <input className="input" id="title" placeholder="Title" />
+            <div className={styles.inputDiv}>
+              <input className={styles.input} id="title" placeholder="Title" />
             </div>
-            <div className="input-div">
-              <input className="input" id="subreddit" placeholder="Subreddit" />
+            <div className={styles.inputDiv}>
+              <input
+                className={styles.input}
+                id="subreddit"
+                placeholder="Subreddit"
+              />
             </div>
-            <div className="input-div">
+            <div className={styles.inputDiv}>
               <textarea
-                className="input textarea"
+                className={`${styles.input} ${styles.textarea}`}
                 id="content"
                 placeholder="Text"
               />
             </div>
-            <div className="submit">
-              <button type="submit" className="submit-btn">
+            <div className={styles.submit}>
+              <button type="submit" className={styles.submitBtn}>
                 Submit
               </button>
             </div>
@@ -59,9 +63,9 @@ const CreatePost = ({ loggedIn, getData }) => {
     );
   } else {
     return (
-      <div className="main-container">
-        <div className="textbox">
-          <span className="must-login-text">
+      <div className={styles.mainContainer}>
+        <div className={styles.textbox}>
+          <span className={styles.mustLoginText}>
             You Must Login First to Create a Post
           </span>
         </div>
