@@ -1,5 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  getAuth,
+  signOut,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDDEhfEXVUOnHt1fKaKSk3IhnHrR2QxrQc",
@@ -14,4 +20,22 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 const db = getDatabase();
 
-export { db };
+async function signInUser() {
+  // Sign in Firebase using popup auth and Google as the identity provider.
+  var provider = new GoogleAuthProvider();
+  await signInWithPopup(getAuth(), provider);
+}
+
+function getUserName() {
+  return getAuth().currentUser.displayName;
+}
+
+function isUserSignedIn() {
+  return !!getAuth().currentUser;
+}
+
+function signOutUser() {
+  signOut(getAuth());
+}
+
+export { db, signInUser, isUserSignedIn, getUserName, signOutUser };

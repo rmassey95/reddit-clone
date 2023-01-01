@@ -1,9 +1,28 @@
 import { React } from "react";
+import { useState } from "react";
 import "../styles/Navbar.css";
 import logo from "../assets/imgs/reddit-logo.png";
 import searchIcon from "../assets/imgs/search-icon.png";
+import {
+  signInUser,
+  isUserSignedIn,
+  signOutUser,
+  getUserName,
+} from "../scripts/firebase";
 
 const Navbar = () => {
+  const [loggedIn, setLoggedIn] = useState(isUserSignedIn);
+
+  const signOut = () => {
+    signOutUser();
+    setLoggedIn(false);
+  };
+
+  const signIn = () => {
+    signInUser();
+    setLoggedIn(true);
+  };
+
   return (
     <div className="navbar">
       <header className="navbar-container">
@@ -27,9 +46,15 @@ const Navbar = () => {
           </form>
         </div>
         <div className="login-container">
-          <a href="/login" type="button" className="login-button">
-            Log In
-          </a>
+          {loggedIn ? (
+            <button onClick={signOut} type="button" className="login-button">
+              Log Out
+            </button>
+          ) : (
+            <button onClick={signIn} type="button" className="login-button">
+              Log In
+            </button>
+          )}
         </div>
       </header>
     </div>
