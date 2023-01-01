@@ -159,6 +159,7 @@
 
 .contentLink:hover {
   background-color: #e2e7e9;
+  cursor: pointer;
   border-radius: 2px;
 }
 

@@ -6,25 +6,13 @@ import topSymbol from "../assets/imgs/top-symbol.png";
 import comments from "../assets/imgs/comments.png";
 import share from "../assets/imgs/share.png";
 import { useNavigate } from "react-router-dom";
+import calcTime from "../scripts/timeCalc.js";
 
 const Homepage = ({ loggedIn, posts }) => {
   const navigate = useNavigate();
 
   const postClicked = (postKey) => {
     navigate(`/post/${postKey}`);
-  };
-
-  const calcTimeFromPost = (datePosted) => {
-    const dateNow = new Date();
-    let difference = dateNow - datePosted;
-    let timeBetween = 0;
-    if (difference - 86400000 > 0) {
-      timeBetween = Math.ceil(difference / (1000 * 3600 * 24));
-      return `${timeBetween} days ago`;
-    } else {
-      timeBetween = Math.ceil(difference / (60 * 60 * 1000));
-      return `${timeBetween} hr. ago`;
-    }
   };
 
   if (posts) {
@@ -93,7 +81,7 @@ const Homepage = ({ loggedIn, posts }) => {
                       <span className={styles.dot}>&bull;</span>
                       <span className={styles.userDate}>
                         Posted by {posts[postKey].user}{" "}
-                        {calcTimeFromPost(posts[postKey].datePosted)}
+                        {calcTime(posts[postKey].datePosted)}
                       </span>
                     </div>
                     <div
@@ -113,7 +101,12 @@ const Homepage = ({ loggedIn, posts }) => {
                       <span>{posts[postKey].content}</span>
                     </div>
                     <div className={styles.postLinks}>
-                      <a className={styles.contentLink} href="/comments">
+                      <div
+                        className={styles.contentLink}
+                        onClick={() => {
+                          postClicked(postKey);
+                        }}
+                      >
                         <img
                           className={styles.postLinkImg}
                           src={comments}
@@ -124,7 +117,7 @@ const Homepage = ({ loggedIn, posts }) => {
                               Object.keys(posts[postKey].comments).length
                             } Comments`
                           : "Comment"}
-                      </a>
+                      </div>
                       <a className={styles.contentLink} href="/share">
                         <img
                           className={styles.postLinkImg}

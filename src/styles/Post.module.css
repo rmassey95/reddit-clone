@@ -135,7 +135,8 @@
 
 .username {
   font-weight: 600;
-  display: block;
+  display: flex;
+  justify-content: space-between;
 }
 
 .disabled {
@@ -145,4 +146,10 @@
 .disabled:hover {
   background-color: rgb(247, 181, 158);
   cursor: not-allowed;
+}
+
+.commentDate {
+  color: rgb(120, 124, 126);
+  font-weight: 500;
+  font-size: 14px;
 }

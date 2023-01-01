@@ -4,6 +4,7 @@ import { db } from "../scripts/firebase";
 import { ref, set } from "firebase/database";
 import uniqid from "uniqid";
 import { getUserName } from "../scripts/firebase";
+import calcTime from "../scripts/timeCalc";
 
 const Post = ({ posts, loggedIn, getData }) => {
   const params = useParams();
@@ -22,10 +23,12 @@ const Post = ({ posts, loggedIn, getData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const date = new Date();
     console.log(e.target[0].value);
     set(ref(db, `posts/${postId}/comments/` + uniqid()), {
       user: getUserName(),
       comment: e.target[0].value,
+      commentDate: date.getTime(),
     });
     eraseTextarea();
     getData();
@@ -44,7 +47,7 @@ const Post = ({ posts, loggedIn, getData }) => {
             <span>r/{post.subreddit}</span>
             <span className={styles.dot}>&bull;</span>
             <span className={styles.userDate}>
-              Posted by {post.user} on DATE
+              Posted by {post.user} {calcTime(post.datePosted)}
             </span>
           </div>
           <div className={styles.postTitle}>
@@ -75,16 +78,23 @@ const Post = ({ posts, loggedIn, getData }) => {
             )}
           </form>
 
-          {Object.keys(post.comments).map((commentKey) => {
-            return (
-              <div key={commentKey} className={styles.comment}>
-                <span className={styles.username}>
-                  {post.comments[commentKey].user}
-                </span>
-                <span>{post.comments[commentKey].comment}</span>
-              </div>
-            );
-          })}
+          {post.comments ? (
+            Object.keys(post.comments).map((commentKey) => {
+              return (
+                <div key={commentKey} className={styles.comment}>
+                  <span className={styles.username}>
+                    {post.comments[commentKey].user}{" "}
+                    <span className={styles.commentDate}>
+                      {calcTime(post.comments[commentKey].commentDate)}
+                    </span>
+                  </span>
+                  <span>{post.comments[commentKey].comment}</span>
+                </div>
+              );
+            })
+          ) : (
+            <div className={styles.comment}>Be the first to comment</div>
+          )}
         </div>
       </div>
     </div>
