@@ -7,12 +7,26 @@ import comments from "../assets/imgs/comments.png";
 import share from "../assets/imgs/share.png";
 import { useNavigate } from "react-router-dom";
 import calcTime from "../scripts/timeCalc.js";
+import { getUserName } from "../scripts/firebase";
 
 const Homepage = ({ loggedIn, posts }) => {
   const navigate = useNavigate();
 
   const postClicked = (postKey) => {
     navigate(`/post/${postKey}`);
+  };
+
+  const checkUser = (user) => {
+    if (getUserName() === user) {
+      return (
+        <div className={styles.buttonGroup}>
+          <button className={styles.contentLinkBtn}>Edit</button>
+          <button className={`${styles.contentLinkBtn} ${styles.deleteBtn}`}>
+            Delete
+          </button>
+        </div>
+      );
+    }
   };
 
   if (posts) {
@@ -101,31 +115,34 @@ const Homepage = ({ loggedIn, posts }) => {
                       <span>{posts[postKey].content}</span>
                     </div>
                     <div className={styles.postLinks}>
-                      <div
-                        className={styles.contentLink}
-                        onClick={() => {
-                          postClicked(postKey);
-                        }}
-                      >
-                        <img
-                          className={styles.postLinkImg}
-                          src={comments}
-                          alt="comments button"
-                        />
-                        {posts[postKey].comments
-                          ? `${
-                              Object.keys(posts[postKey].comments).length
-                            } Comments`
-                          : "Comment"}
+                      <div className={styles.buttonGroup}>
+                        <div
+                          className={styles.contentLink}
+                          onClick={() => {
+                            postClicked(postKey);
+                          }}
+                        >
+                          <img
+                            className={styles.postLinkImg}
+                            src={comments}
+                            alt="comments button"
+                          />
+                          {posts[postKey].comments
+                            ? `${
+                                Object.keys(posts[postKey].comments).length
+                              } Comments`
+                            : "Comment"}
+                        </div>
+                        <a className={styles.contentLink} href="/share">
+                          <img
+                            className={styles.postLinkImg}
+                            src={share}
+                            alt="share button"
+                          />
+                          Share
+                        </a>
                       </div>
-                      <a className={styles.contentLink} href="/share">
-                        <img
-                          className={styles.postLinkImg}
-                          src={share}
-                          alt="share button"
-                        />
-                        Share
-                      </a>
+                      {checkUser(posts[postKey].user)}
                     </div>
                   </div>
                 </div>

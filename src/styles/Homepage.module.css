@@ -148,6 +148,12 @@
   padding: 5px 8px 10px 8px;
 }
 
+.contentLinkBtn {
+  color: rgb(135, 138, 140);
+  background-color: white;
+  border: none;
+}
+
 .contentLink {
   color: rgb(135, 138, 140);
   text-decoration: none;
@@ -157,7 +163,8 @@
   align-items: center;
 }
 
-.contentLink:hover {
+.contentLink:hover,
+.contentLinkBtn:hover {
   background-color: #e2e7e9;
   cursor: pointer;
   border-radius: 2px;
@@ -167,9 +174,8 @@
   height: 40px;
   width: 100%;
   display: flex;
+  justify-content: space-between;
   padding-bottom: 2px;
-  padding-left: 4px;
-  gap: 5px;
 }
 
 .postLinkImg {
@@ -179,4 +185,13 @@
 
 .loginToCreatePost {
   line-height: 32px;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 4px;
+}
+
+.deleteBtn {
+  margin-right: 4px;
 }

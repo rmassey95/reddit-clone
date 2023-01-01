@@ -24,7 +24,6 @@ const Post = ({ posts, loggedIn, getData }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const date = new Date();
-    console.log(e.target[0].value);
     set(ref(db, `posts/${postId}/comments/` + uniqid()), {
       user: getUserName(),
       comment: e.target[0].value,
@@ -32,6 +31,17 @@ const Post = ({ posts, loggedIn, getData }) => {
     });
     eraseTextarea();
     getData();
+  };
+
+  const checkUser = (user) => {
+    if (user === getUserName()) {
+      return (
+        <div className={styles.editDeleteContainer}>
+          <button className={styles.editDeleteBtn}>Edit</button>{" "}
+          <button className={styles.editDeleteBtn}>Delete</button>
+        </div>
+      );
+    }
   };
 
   return (
@@ -89,6 +99,7 @@ const Post = ({ posts, loggedIn, getData }) => {
                     </span>
                   </span>
                   <span>{post.comments[commentKey].comment}</span>
+                  {checkUser(post.comments[commentKey].user)}
                 </div>
               );
             })

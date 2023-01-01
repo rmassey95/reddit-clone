@@ -1,6 +1,6 @@
 .mainContainer {
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 49px);
   display: inline-block;
   background-color: #dae0e6;
   display: flex;
@@ -152,4 +152,21 @@
   color: rgb(120, 124, 126);
   font-weight: 500;
   font-size: 14px;
+}
+
+.editDeleteBtn {
+  background-color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 10px 5px 10px;
+}
+
+.editDeleteBtn:hover {
+  border-radius: 20px;
+  background-color: #e2e7e9;
+  cursor: pointer;
+}
+
+.editDeleteContainer {
+  margin-top: 6px;
 }
