@@ -1,27 +1,24 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import "../styles/Homepage.css";
 import hotSymbol from "../assets/imgs/top-symbol.png";
 import newSymbol from "../assets/imgs/new-symbol.png";
 import topSymbol from "../assets/imgs/top-symbol.png";
 import comments from "../assets/imgs/comments.png";
 import share from "../assets/imgs/share.png";
-import { db } from "../scripts/firebase";
-import { ref, onValue } from "firebase/database";
 
-const Homepage = ({ loggedIn }) => {
-  const [posts, setPosts] = useState([]);
-
-  const getData = () => {
-    const data = ref(db, "posts");
-    onValue(data, (snapshot) => {
-      setPosts(snapshot.val());
-    });
+const Homepage = ({ loggedIn, posts }) => {
+  const calcTimeFromPost = (datePosted) => {
+    const dateNow = new Date();
+    let difference = dateNow - datePosted;
+    let timeBetween = 0;
+    if (difference - 86400000 > 0) {
+      timeBetween = Math.ceil(difference / (1000 * 3600 * 24));
+      return `${timeBetween} days ago`;
+    } else {
+      timeBetween = Math.ceil(difference / (60 * 60 * 1000));
+      return `${timeBetween} hours ago`;
+    }
   };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   if (posts) {
     return (
@@ -92,7 +89,8 @@ const Homepage = ({ loggedIn }) => {
                       <span>r/{posts[postKey].subreddit}</span>
                       <span className="dot">&bull;</span>
                       <span className="user-date">
-                        Posted by {posts[postKey].user} on DATE
+                        Posted by {posts[postKey].user}{" "}
+                        {calcTimeFromPost(posts[postKey].datePosted)}
                       </span>
                     </div>
                     <div className="post-title">

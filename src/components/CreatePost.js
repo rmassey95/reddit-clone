@@ -6,18 +6,21 @@ import uniqid from "uniqid";
 import { useNavigate } from "react-router-dom";
 import { getUserName } from "../scripts/firebase";
 
-const CreatePost = ({ loggedIn }) => {
+const CreatePost = ({ loggedIn, getData }) => {
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const date = new Date();
     set(ref(db, "posts/" + uniqid()), {
       user: getUserName(),
       title: e.target[0].value,
       subreddit: e.target[1].value,
       content: e.target[2].value,
       upvotes: 0,
+      datePosted: date.getTime(),
     });
+    getData();
     navigate("/");
   };
 
