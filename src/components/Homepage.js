@@ -8,8 +8,14 @@ import share from "../assets/imgs/share.png";
 import { useNavigate } from "react-router-dom";
 import calcTime from "../scripts/timeCalc.js";
 import { getUserName, deleteData } from "../scripts/firebase";
-import { db } from "../scripts/firebase";
-import { ref, set } from "firebase/database";
+import { addUserToDb } from "../scripts/firebase";
+import {
+  removeDownvote,
+  addUpvote,
+  addvoteToPost,
+  removeUpvote,
+  addDownvote,
+} from "../scripts/arrowClicks";
 
 const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
   const navigate = useNavigate();
@@ -49,76 +55,46 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
 
   const upArrowClick = (postKey, indxPos = -1) => {
     if (!users.hasOwnProperty(`${getUserName()}`)) {
-      let newUser = {};
-      newUser = {
-        upvotedPosts: ["null"],
-        downvotedPosts: ["null"],
-      };
-      set(ref(db, `users/${getUserName()}`), newUser);
+      addUserToDb(users);
     }
 
     if (indxPos !== -1) {
-      if (users[getUserName()].downvotedPosts.length > 1) {
-        let updatedData = users[getUserName()].downvotedPosts;
-        updatedData.splice(indxPos, 1);
-        set(ref(db, `users/${getUserName()}/downvotedPosts/`), updatedData);
-      } else {
-        set(ref(db, `users/${getUserName()}/downvotedPosts/`), ["null"]);
-      }
+      let downvoteData = users[getUserName()].downvotedPosts;
+      removeDownvote(indxPos, downvoteData);
     }
 
-    let userData = [];
-    if (users[getUserName()].upvotedPosts[0] === "null") {
-      userData = [{ post: postKey }];
-    } else {
-      userData = users[getUserName()].upvotedPosts;
-      userData.push({ post: postKey });
-    }
+    let userUpvotes = users[getUserName()].upvotedPosts;
+    addUpvote(postKey, userUpvotes);
 
-    set(ref(db, `users/${getUserName()}/upvotedPosts/`), userData);
-
-    set(ref(db, `posts/${postKey}/`), {
+    let updatedPost = {
       ...posts[postKey],
       upvotes: posts[postKey].upvotes + 1,
-    });
+    };
+    addvoteToPost(updatedPost, postKey);
+
     getData();
     getUsers();
   };
 
   const downArrowClick = (postKey, indxPos = -1) => {
     if (!users.hasOwnProperty(`${getUserName()}`)) {
-      let newUser = {};
-      newUser = {
-        upvotedPosts: ["null"],
-        downvotedPosts: ["null"],
-      };
-      set(ref(db, `users/${getUserName()}`), newUser);
+      addUserToDb(users);
     }
 
     if (indxPos !== -1) {
-      if (users[getUserName()].upvotedPosts.length > 1) {
-        let updatedData = users[getUserName()].upvotedPosts;
-        updatedData.splice(indxPos, 1);
-        set(ref(db, `users/${getUserName()}/upvotedPosts/`), updatedData);
-      } else {
-        set(ref(db, `users/${getUserName()}/upvotedPosts/`), ["null"]);
-      }
+      let upvoteData = users[getUserName()].upvotedPosts;
+      removeUpvote(indxPos, upvoteData);
     }
 
-    let userData = [];
-    if (users[getUserName()].downvotedPosts[0] === "null") {
-      userData = [{ post: postKey }];
-    } else {
-      userData = users[getUserName()].downvotedPosts;
-      userData.push({ post: postKey });
-    }
+    let userDownvotes = users[getUserName()].downvotedPosts;
+    addDownvote(postKey, userDownvotes);
 
-    set(ref(db, `users/${getUserName()}/downvotedPosts/`), userData);
-
-    set(ref(db, `posts/${postKey}/`), {
+    let updatedPost = {
       ...posts[postKey],
       upvotes: posts[postKey].upvotes - 1,
-    });
+    };
+    addvoteToPost(updatedPost, postKey);
+
     getData();
     getUsers();
   };

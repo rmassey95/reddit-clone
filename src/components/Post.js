@@ -1,10 +1,17 @@
 import { useParams } from "react-router-dom";
 import styles from "../styles/Post.module.css";
-import { db } from "../scripts/firebase";
+import { db, addUserToDb } from "../scripts/firebase";
 import { ref, set } from "firebase/database";
 import uniqid from "uniqid";
 import { getUserName, deleteData } from "../scripts/firebase";
 import calcTime from "../scripts/timeCalc";
+import {
+  removeDownvote,
+  addUpvote,
+  addvoteToPost,
+  removeUpvote,
+  addDownvote,
+} from "../scripts/arrowClicks";
 
 const Post = ({ posts, loggedIn, getData, users, getUsers }) => {
   const params = useParams();
@@ -82,76 +89,43 @@ const Post = ({ posts, loggedIn, getData, users, getUsers }) => {
 
   const downArrowClick = (postKey, indxPos = -1) => {
     if (!users.hasOwnProperty(`${getUserName()}`)) {
-      let newUser = {};
-      newUser = {
-        upvotedPosts: ["null"],
-        downvotedPosts: ["null"],
-      };
-      set(ref(db, `users/${getUserName()}`), newUser);
+      addUserToDb(users);
     }
 
     if (indxPos !== -1) {
-      if (users[getUserName()].upvotedPosts.length > 1) {
-        let updatedData = users[getUserName()].upvotedPosts;
-        updatedData.splice(indxPos, 1);
-        set(ref(db, `users/${getUserName()}/upvotedPosts/`), updatedData);
-      } else {
-        set(ref(db, `users/${getUserName()}/upvotedPosts/`), ["null"]);
-      }
+      let upvoteData = users[getUserName()].upvotedPosts;
+      removeUpvote(indxPos, upvoteData);
     }
 
-    let userData = [];
-    if (users[getUserName()].downvotedPosts[0] === "null") {
-      userData = [{ post: postKey }];
-    } else {
-      userData = users[getUserName()].downvotedPosts;
-      userData.push({ post: postKey });
-    }
+    let userDownvotes = users[getUserName()].downvotedPosts;
+    addDownvote(postKey, userDownvotes);
 
-    set(ref(db, `users/${getUserName()}/downvotedPosts/`), userData);
+    let updatedPost = {
+      ...posts[postKey],
+      upvotes: posts[postKey].upvotes - 1,
+    };
+    addvoteToPost(updatedPost, postKey);
 
-    set(ref(db, `posts/${postKey}/`), {
-      ...post,
-      upvotes: post.upvotes - 1,
-    });
     getData();
     getUsers();
   };
 
-  const upArrowClick = (postKey, indxPos = -1) => {
+  const upArrowClick = (indxPosOfDownvote = -1) => {
     if (!users.hasOwnProperty(`${getUserName()}`)) {
-      let newUser = {};
-      newUser = {
-        upvotedPosts: ["null"],
-        downvotedPosts: ["null"],
-      };
-      set(ref(db, `users/${getUserName()}`), newUser);
+      addUserToDb(users);
     }
 
-    if (indxPos !== -1) {
-      if (users[getUserName()].downvotedPosts.length > 1) {
-        let updatedData = users[getUserName()].downvotedPosts;
-        updatedData.splice(indxPos, 1);
-        set(ref(db, `users/${getUserName()}/downvotedPosts/`), updatedData);
-      } else {
-        set(ref(db, `users/${getUserName()}/downvotedPosts/`), ["null"]);
-      }
+    if (indxPosOfDownvote !== -1) {
+      let downvoteData = users[getUserName()].downvotedPosts;
+      removeDownvote(indxPosOfDownvote, downvoteData);
     }
 
-    let userData = [];
-    if (users[getUserName()].upvotedPosts[0] === "null") {
-      userData = [{ post: postKey }];
-    } else {
-      userData = users[getUserName()].upvotedPosts;
-      userData.push({ post: postKey });
-    }
+    let userUpvotes = users[getUserName()].upvotedPosts;
+    addUpvote(postId, userUpvotes);
 
-    set(ref(db, `users/${getUserName()}/upvotedPosts/`), userData);
+    let updatedPost = { ...post, upvotes: post.upvotes + 1 };
+    addvoteToPost(updatedPost, postId);
 
-    set(ref(db, `posts/${postKey}/`), {
-      ...post,
-      upvotes: post.upvotes + 1,
-    });
     getData();
     getUsers();
   };
@@ -207,7 +181,7 @@ const Post = ({ posts, loggedIn, getData, users, getUsers }) => {
             <button
               className={styles.upArrow}
               onClick={() => {
-                upArrowClick(postId, downvoteArrayIndexPos);
+                upArrowClick(downvoteArrayIndexPos);
               }}
             >
               &#8679;
@@ -227,7 +201,7 @@ const Post = ({ posts, loggedIn, getData, users, getUsers }) => {
             <button
               className={styles.upArrow}
               onClick={() => {
-                upArrowClick(postId);
+                upArrowClick();
               }}
             >
               &#8679;

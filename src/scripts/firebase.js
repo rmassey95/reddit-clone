@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, remove } from "firebase/database";
+import { getDatabase, ref, remove, set } from "firebase/database";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -46,4 +46,26 @@ function deleteData(dataPath) {
   remove(ref(db, dataPath));
 }
 
-export { db, signInUser, isUserSignedIn, getUserName, signOutUser, deleteData };
+function addUserToDb(users) {
+  let newUser = {};
+  newUser = {
+    upvotedPosts: ["null"],
+    downvotedPosts: ["null"],
+  };
+  set(ref(db, `users/${getUserName()}`), newUser);
+}
+
+function addToDb(path, data) {
+  set(ref(db, path), data);
+}
+
+export {
+  db,
+  signInUser,
+  isUserSignedIn,
+  getUserName,
+  signOutUser,
+  deleteData,
+  addUserToDb,
+  addToDb,
+};
