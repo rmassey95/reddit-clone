@@ -176,3 +176,15 @@
 .editDeleteContainer {
   margin-top: 6px;
 }
+
+.upSelected {
+  color: rgb(255, 69, 0);
+  background-color: #e2e7e9;
+  border-radius: 5px;
+}
+
+.downSelected {
+  color: rgb(0, 110, 211);
+  background-color: #e2e7e9;
+  border-radius: 5px;
+}

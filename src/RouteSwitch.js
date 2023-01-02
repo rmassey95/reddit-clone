@@ -77,6 +77,7 @@ const RouteSwitch = () => {
               posts={posts}
               getData={getData}
               users={users}
+              getUsers={getUsers}
             />
           }
         />
@@ -87,7 +88,15 @@ const RouteSwitch = () => {
         />
         <Route
           path="/post/:id"
-          element={<Post posts={posts} loggedIn={loggedIn} getData={getData} />}
+          element={
+            <Post
+              posts={posts}
+              loggedIn={loggedIn}
+              getData={getData}
+              users={users}
+              getUsers={getUsers}
+            />
+          }
         />
         <Route
           path="/edit/:id"

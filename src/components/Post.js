@@ -6,7 +6,7 @@ import uniqid from "uniqid";
 import { getUserName, deleteData } from "../scripts/firebase";
 import calcTime from "../scripts/timeCalc";
 
-const Post = ({ posts, loggedIn, getData }) => {
+const Post = ({ posts, loggedIn, getData, users, getUsers }) => {
   const params = useParams();
   const postId = params.id;
   let post = {};
@@ -80,14 +80,189 @@ const Post = ({ posts, loggedIn, getData }) => {
     }
   };
 
+  const downArrowClick = (postKey, indxPos = -1) => {
+    if (!users.hasOwnProperty(`${getUserName()}`)) {
+      let newUser = {};
+      newUser = {
+        upvotedPosts: ["null"],
+        downvotedPosts: ["null"],
+      };
+      set(ref(db, `users/${getUserName()}`), newUser);
+    }
+
+    if (indxPos !== -1) {
+      if (users[getUserName()].upvotedPosts.length > 1) {
+        let updatedData = users[getUserName()].upvotedPosts;
+        updatedData.splice(indxPos, 1);
+        set(ref(db, `users/${getUserName()}/upvotedPosts/`), updatedData);
+      } else {
+        set(ref(db, `users/${getUserName()}/upvotedPosts/`), ["null"]);
+      }
+    }
+
+    let userData = [];
+    if (users[getUserName()].downvotedPosts[0] === "null") {
+      userData = [{ post: postKey }];
+    } else {
+      userData = users[getUserName()].downvotedPosts;
+      userData.push({ post: postKey });
+    }
+
+    set(ref(db, `users/${getUserName()}/downvotedPosts/`), userData);
+
+    set(ref(db, `posts/${postKey}/`), {
+      ...post,
+      upvotes: post.upvotes - 1,
+    });
+    getData();
+    getUsers();
+  };
+
+  const upArrowClick = (postKey, indxPos = -1) => {
+    if (!users.hasOwnProperty(`${getUserName()}`)) {
+      let newUser = {};
+      newUser = {
+        upvotedPosts: ["null"],
+        downvotedPosts: ["null"],
+      };
+      set(ref(db, `users/${getUserName()}`), newUser);
+    }
+
+    if (indxPos !== -1) {
+      if (users[getUserName()].downvotedPosts.length > 1) {
+        let updatedData = users[getUserName()].downvotedPosts;
+        updatedData.splice(indxPos, 1);
+        set(ref(db, `users/${getUserName()}/downvotedPosts/`), updatedData);
+      } else {
+        set(ref(db, `users/${getUserName()}/downvotedPosts/`), ["null"]);
+      }
+    }
+
+    let userData = [];
+    if (users[getUserName()].upvotedPosts[0] === "null") {
+      userData = [{ post: postKey }];
+    } else {
+      userData = users[getUserName()].upvotedPosts;
+      userData.push({ post: postKey });
+    }
+
+    set(ref(db, `users/${getUserName()}/upvotedPosts/`), userData);
+
+    set(ref(db, `posts/${postKey}/`), {
+      ...post,
+      upvotes: post.upvotes + 1,
+    });
+    getData();
+    getUsers();
+  };
+
+  const checkVote = () => {
+    if (loggedIn) {
+      const username = getUserName();
+      let upvoteArray = [];
+      let downvoteArray = [];
+      let upvoteArrayIndexPos = -1;
+      let downvoteArrayIndexPos = -1;
+
+      if (users[username].upvotedPosts[0] !== "null") {
+        upvoteArray = Object.values(users[username].upvotedPosts);
+      }
+      if (users[username].downvotedPosts[0] !== "null") {
+        downvoteArray = Object.values(users[username].downvotedPosts);
+      }
+
+      upvoteArrayIndexPos = upvoteArray.findIndex(
+        (element) => element.post === postId
+      );
+
+      if (upvoteArrayIndexPos === -1) {
+        downvoteArrayIndexPos = downvoteArray.findIndex(
+          (element) => element.post === postId
+        );
+      }
+
+      if (upvoteArrayIndexPos !== -1) {
+        return (
+          <div className={styles.upvotes}>
+            <button
+              className={`${styles.upArrow} ${styles.upSelected}`}
+              disabled
+            >
+              &#8679;
+            </button>
+            <span>{post.upvotes}</span>
+            <button
+              className={styles.downArrow}
+              onClick={() => {
+                downArrowClick(postId, upvoteArrayIndexPos);
+              }}
+            >
+              &#8681;
+            </button>
+          </div>
+        );
+      } else if (downvoteArrayIndexPos !== -1) {
+        return (
+          <div className={styles.upvotes}>
+            <button
+              className={styles.upArrow}
+              onClick={() => {
+                upArrowClick(postId, downvoteArrayIndexPos);
+              }}
+            >
+              &#8679;
+            </button>
+            <span>{post.upvotes}</span>
+            <button
+              className={`${styles.downArrow} ${styles.downSelected}`}
+              disabled
+            >
+              &#8681;
+            </button>
+          </div>
+        );
+      } else {
+        return (
+          <div className={styles.upvotes}>
+            <button
+              className={styles.upArrow}
+              onClick={() => {
+                upArrowClick(postId);
+              }}
+            >
+              &#8679;
+            </button>
+            <span>{post.upvotes}</span>
+            <button
+              className={styles.downArrow}
+              onClick={() => {
+                downArrowClick(postId);
+              }}
+            >
+              &#8681;
+            </button>
+          </div>
+        );
+      }
+    } else {
+      return (
+        <div className={styles.upvotes}>
+          <button className={styles.upArrow} disabled>
+            &#8679;
+          </button>
+          <span>{post.upvotes}</span>
+          <button className={styles.downArrow} disabled>
+            &#8681;
+          </button>
+        </div>
+      );
+    }
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.post}>
-        <div className={styles.upvotes}>
-          <button className={styles.upArrow}>&#8679;</button>
-          <span>{post.upvotes}</span>
-          <button className={styles.downArrow}>&#8681;</button>
-        </div>
+        {checkVote()}
         <div className={styles.content}>
           <div className={styles.postInfo}>
             <span>r/{post.subreddit}</span>

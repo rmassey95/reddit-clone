@@ -11,7 +11,7 @@ import { getUserName, deleteData } from "../scripts/firebase";
 import { db } from "../scripts/firebase";
 import { ref, set } from "firebase/database";
 
-const Homepage = ({ loggedIn, posts, getData, users }) => {
+const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
   const navigate = useNavigate();
 
   const postClicked = (postKey) => {
@@ -48,19 +48,31 @@ const Homepage = ({ loggedIn, posts, getData, users }) => {
   };
 
   const upArrowClick = (postKey, indxPos = -1) => {
+    if (!users.hasOwnProperty(`${getUserName()}`)) {
+      let newUser = {};
+      newUser = {
+        upvotedPosts: ["null"],
+        downvotedPosts: ["null"],
+      };
+      set(ref(db, `users/${getUserName()}`), newUser);
+    }
+
     if (indxPos !== -1) {
-      if (Object.values(users[getUserName()].downvotedPosts).length > 1) {
-        deleteData(`users/${getUserName()}/downvotedPosts/${indxPos}`);
+      if (users[getUserName()].downvotedPosts.length > 1) {
+        let updatedData = users[getUserName()].downvotedPosts;
+        updatedData.splice(indxPos, 1);
+        set(ref(db, `users/${getUserName()}/downvotedPosts/`), updatedData);
       } else {
-        set(ref(db, `users/${getUserName()}/downvotedPosts/`), "null");
+        set(ref(db, `users/${getUserName()}/downvotedPosts/`), ["null"]);
       }
     }
 
-    let userData = users[getUserName()].upvotedPosts;
-    if (userData === "null") {
+    let userData = [];
+    if (users[getUserName()].upvotedPosts[0] === "null") {
       userData = [{ post: postKey }];
     } else {
-      userData = userData.concat({ post: postKey });
+      userData = users[getUserName()].upvotedPosts;
+      userData.push({ post: postKey });
     }
 
     set(ref(db, `users/${getUserName()}/upvotedPosts/`), userData);
@@ -70,22 +82,35 @@ const Homepage = ({ loggedIn, posts, getData, users }) => {
       upvotes: posts[postKey].upvotes + 1,
     });
     getData();
+    getUsers();
   };
 
   const downArrowClick = (postKey, indxPos = -1) => {
+    if (!users.hasOwnProperty(`${getUserName()}`)) {
+      let newUser = {};
+      newUser = {
+        upvotedPosts: ["null"],
+        downvotedPosts: ["null"],
+      };
+      set(ref(db, `users/${getUserName()}`), newUser);
+    }
+
     if (indxPos !== -1) {
-      if (Object.values(users[getUserName()].upvotedPosts).length > 1) {
-        deleteData(`users/${getUserName()}/upvotedPosts/${indxPos}`);
+      if (users[getUserName()].upvotedPosts.length > 1) {
+        let updatedData = users[getUserName()].upvotedPosts;
+        updatedData.splice(indxPos, 1);
+        set(ref(db, `users/${getUserName()}/upvotedPosts/`), updatedData);
       } else {
-        set(ref(db, `users/${getUserName()}/upvotedPosts/`), "null");
+        set(ref(db, `users/${getUserName()}/upvotedPosts/`), ["null"]);
       }
     }
 
-    let userData = users[getUserName()].downvotedPosts;
-    if (userData === "null") {
+    let userData = [];
+    if (users[getUserName()].downvotedPosts[0] === "null") {
       userData = [{ post: postKey }];
     } else {
-      userData = userData.concat({ post: postKey });
+      userData = users[getUserName()].downvotedPosts;
+      userData.push({ post: postKey });
     }
 
     set(ref(db, `users/${getUserName()}/downvotedPosts/`), userData);
@@ -95,6 +120,7 @@ const Homepage = ({ loggedIn, posts, getData, users }) => {
       upvotes: posts[postKey].upvotes - 1,
     });
     getData();
+    getUsers();
   };
 
   const checkVoteStatus = (postKey) => {
@@ -105,10 +131,10 @@ const Homepage = ({ loggedIn, posts, getData, users }) => {
     let upvoteArrayIndexPos = -1;
     let downvoteArrayIndexPos = -1;
 
-    if (users[username].upvotedPosts != null) {
+    if (users[username].upvotedPosts[0] !== "null") {
       upvoteArray = Object.values(users[username].upvotedPosts);
     }
-    if (users[username].downvotedPosts != null) {
+    if (users[username].downvotedPosts[0] !== "null") {
       downvoteArray = Object.values(users[username].downvotedPosts);
     }
 
@@ -239,7 +265,7 @@ const Homepage = ({ loggedIn, posts, getData, users }) => {
             {Object.keys(posts).map((postKey) => {
               return (
                 <div className={styles.post} key={postKey}>
-                  {getUserName() ? (
+                  {loggedIn ? (
                     checkVoteStatus(postKey)
                   ) : (
                     <div className={styles.upvotes}>
