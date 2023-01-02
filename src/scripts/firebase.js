@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { getDatabase, ref, remove } from "firebase/database";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -38,4 +38,8 @@ function signOutUser() {
   signOut(getAuth());
 }
 
-export { db, signInUser, isUserSignedIn, getUserName, signOutUser };
+function deleteData(dataPath) {
+  remove(ref(db, dataPath));
+}
+
+export { db, signInUser, isUserSignedIn, getUserName, signOutUser, deleteData };

@@ -7,7 +7,7 @@ import comments from "../assets/imgs/comments.png";
 import share from "../assets/imgs/share.png";
 import { useNavigate } from "react-router-dom";
 import calcTime from "../scripts/timeCalc.js";
-import { getUserName } from "../scripts/firebase";
+import { getUserName, deleteData } from "../scripts/firebase";
 
 const Homepage = ({ loggedIn, posts }) => {
   const navigate = useNavigate();
@@ -16,12 +16,28 @@ const Homepage = ({ loggedIn, posts }) => {
     navigate(`/post/${postKey}`);
   };
 
-  const checkUser = (user) => {
+  const editPost = (postKey) => {
+    navigate(`/edit/${postKey}`);
+  };
+
+  const checkUser = (user, postKey) => {
     if (getUserName() === user) {
       return (
         <div className={styles.buttonGroup}>
-          <button className={styles.contentLinkBtn}>Edit</button>
-          <button className={`${styles.contentLinkBtn} ${styles.deleteBtn}`}>
+          <button
+            className={styles.contentLinkBtn}
+            onClick={() => {
+              editPost(postKey);
+            }}
+          >
+            Edit
+          </button>
+          <button
+            className={`${styles.contentLinkBtn} ${styles.deleteBtn}`}
+            onClick={() => {
+              deleteData(`/posts/${postKey}`);
+            }}
+          >
             Delete
           </button>
         </div>
@@ -142,7 +158,7 @@ const Homepage = ({ loggedIn, posts }) => {
                           Share
                         </a>
                       </div>
-                      {checkUser(posts[postKey].user)}
+                      {checkUser(posts[postKey].user, postKey)}
                     </div>
                   </div>
                 </div>

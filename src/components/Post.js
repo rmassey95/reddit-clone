@@ -3,7 +3,7 @@ import styles from "../styles/Post.module.css";
 import { db } from "../scripts/firebase";
 import { ref, set } from "firebase/database";
 import uniqid from "uniqid";
-import { getUserName } from "../scripts/firebase";
+import { getUserName, deleteData } from "../scripts/firebase";
 import calcTime from "../scripts/timeCalc";
 
 const Post = ({ posts, loggedIn, getData }) => {
@@ -28,17 +28,53 @@ const Post = ({ posts, loggedIn, getData }) => {
       user: getUserName(),
       comment: e.target[0].value,
       commentDate: date.getTime(),
+      edit: false,
     });
     eraseTextarea();
     getData();
   };
 
-  const checkUser = (user) => {
-    if (user === getUserName()) {
+  const updateComment = (e, commentKey) => {
+    e.preventDefault();
+    set(ref(db, `posts/${postId}/comments/${commentKey}`), {
+      user: post.comments[commentKey].user,
+      comment: e.target[0].value,
+      commentDate: post.comments[commentKey].commentDate,
+      edit: false,
+    });
+    getData();
+  };
+
+  const editComment = (commentKey) => {
+    set(ref(db, `posts/${postId}/comments/${commentKey}`), {
+      user: post.comments[commentKey].user,
+      comment: post.comments[commentKey].comment,
+      commentDate: post.comments[commentKey].commentDate,
+      edit: true,
+    });
+    getData();
+  };
+
+  const checkUser = (user, commentKey) => {
+    if (user === getUserName() && !post.comments[commentKey].edit) {
       return (
         <div className={styles.editDeleteContainer}>
-          <button className={styles.editDeleteBtn}>Edit</button>{" "}
-          <button className={styles.editDeleteBtn}>Delete</button>
+          <button
+            className={styles.editDeleteBtn}
+            onClick={() => {
+              editComment(commentKey);
+            }}
+          >
+            Edit
+          </button>{" "}
+          <button
+            className={styles.editDeleteBtn}
+            onClick={() => {
+              deleteData(`/posts/${postId}/comments/${commentKey}`);
+            }}
+          >
+            Delete
+          </button>
         </div>
       );
     }
@@ -98,8 +134,22 @@ const Post = ({ posts, loggedIn, getData }) => {
                       {calcTime(post.comments[commentKey].commentDate)}
                     </span>
                   </span>
-                  <span>{post.comments[commentKey].comment}</span>
-                  {checkUser(post.comments[commentKey].user)}
+                  {post.comments[commentKey].edit ? (
+                    <form
+                      onSubmit={(e) => {
+                        updateComment(e, commentKey);
+                      }}
+                    >
+                      <textarea
+                        defaultValue={post.comments[commentKey].comment}
+                      ></textarea>
+                      <button className={styles.submitBtn}>Submit</button>
+                    </form>
+                  ) : (
+                    <span>{post.comments[commentKey].comment}</span>
+                  )}
+
+                  {checkUser(post.comments[commentKey].user, commentKey)}
                 </div>
               );
             })

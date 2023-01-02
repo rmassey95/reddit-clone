@@ -1,6 +1,6 @@
 .mainContainer {
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 49px);
   display: inline-block;
   background-color: #dae0e6;
   display: flex;

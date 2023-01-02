@@ -154,17 +154,23 @@
   font-size: 14px;
 }
 
-.editDeleteBtn {
+.editDeleteBtn,
+.submitBtn {
   background-color: white;
   border: none;
   border-radius: 20px;
   padding: 5px 10px 5px 10px;
 }
 
-.editDeleteBtn:hover {
+.editDeleteBtn:hover,
+.submitBtn:hover {
   border-radius: 20px;
   background-color: #e2e7e9;
   cursor: pointer;
+}
+
+.submitBtn {
+  display: block;
 }
 
 .editDeleteContainer {
