@@ -18,6 +18,7 @@ import { ref, onValue } from "firebase/database";
 
 const RouteSwitch = () => {
   const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const getData = () => {
     const data = ref(db, "posts");
@@ -26,8 +27,16 @@ const RouteSwitch = () => {
     });
   };
 
+  const getUsers = () => {
+    const data = ref(db, "users");
+    onValue(data, (snapshot) => {
+      setUsers(snapshot.val());
+    });
+  };
+
   useEffect(() => {
     getData();
+    getUsers();
   }, []);
 
   const [loggedIn, setLoggedIn] = useState(isUserSignedIn);
@@ -62,7 +71,14 @@ const RouteSwitch = () => {
       <Routes>
         <Route
           path="/"
-          element={<Homepage loggedIn={loggedIn} posts={posts} />}
+          element={
+            <Homepage
+              loggedIn={loggedIn}
+              posts={posts}
+              getData={getData}
+              users={users}
+            />
+          }
         />
         <Route path="/r" element={<Subreddit />} />
         <Route

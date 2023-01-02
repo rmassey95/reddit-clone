@@ -27,7 +27,11 @@ async function signInUser() {
 }
 
 function getUserName() {
-  return getAuth().currentUser.displayName;
+  if (getAuth().currentUser) {
+    return getAuth().currentUser.displayName;
+  } else {
+    return null;
+  }
 }
 
 function isUserSignedIn() {

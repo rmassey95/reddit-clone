@@ -8,8 +8,10 @@ import share from "../assets/imgs/share.png";
 import { useNavigate } from "react-router-dom";
 import calcTime from "../scripts/timeCalc.js";
 import { getUserName, deleteData } from "../scripts/firebase";
+import { db } from "../scripts/firebase";
+import { ref, set } from "firebase/database";
 
-const Homepage = ({ loggedIn, posts }) => {
+const Homepage = ({ loggedIn, posts, getData, users }) => {
   const navigate = useNavigate();
 
   const postClicked = (postKey) => {
@@ -21,7 +23,7 @@ const Homepage = ({ loggedIn, posts }) => {
   };
 
   const checkUser = (user, postKey) => {
-    if (getUserName() === user) {
+    if (getUserName() !== null && getUserName === user) {
       return (
         <div className={styles.buttonGroup}>
           <button
@@ -39,6 +41,143 @@ const Homepage = ({ loggedIn, posts }) => {
             }}
           >
             Delete
+          </button>
+        </div>
+      );
+    }
+  };
+
+  const upArrowClick = (postKey, indxPos = -1) => {
+    if (indxPos !== -1) {
+      if (Object.values(users[getUserName()].downvotedPosts).length > 1) {
+        deleteData(`users/${getUserName()}/downvotedPosts/${indxPos}`);
+      } else {
+        set(ref(db, `users/${getUserName()}/downvotedPosts/`), "null");
+      }
+    }
+
+    let userData = users[getUserName()].upvotedPosts;
+    if (userData === "null") {
+      userData = [{ post: postKey }];
+    } else {
+      userData = userData.concat({ post: postKey });
+    }
+
+    set(ref(db, `users/${getUserName()}/upvotedPosts/`), userData);
+
+    set(ref(db, `posts/${postKey}/`), {
+      ...posts[postKey],
+      upvotes: posts[postKey].upvotes + 1,
+    });
+    getData();
+  };
+
+  const downArrowClick = (postKey, indxPos = -1) => {
+    if (indxPos !== -1) {
+      if (Object.values(users[getUserName()].upvotedPosts).length > 1) {
+        deleteData(`users/${getUserName()}/upvotedPosts/${indxPos}`);
+      } else {
+        set(ref(db, `users/${getUserName()}/upvotedPosts/`), "null");
+      }
+    }
+
+    let userData = users[getUserName()].downvotedPosts;
+    if (userData === "null") {
+      userData = [{ post: postKey }];
+    } else {
+      userData = userData.concat({ post: postKey });
+    }
+
+    set(ref(db, `users/${getUserName()}/downvotedPosts/`), userData);
+
+    set(ref(db, `posts/${postKey}/`), {
+      ...posts[postKey],
+      upvotes: posts[postKey].upvotes - 1,
+    });
+    getData();
+  };
+
+  const checkVoteStatus = (postKey) => {
+    const username = getUserName();
+
+    let upvoteArray = [];
+    let downvoteArray = [];
+    let upvoteArrayIndexPos = -1;
+    let downvoteArrayIndexPos = -1;
+
+    if (users[username].upvotedPosts != null) {
+      upvoteArray = Object.values(users[username].upvotedPosts);
+    }
+    if (users[username].downvotedPosts != null) {
+      downvoteArray = Object.values(users[username].downvotedPosts);
+    }
+
+    upvoteArrayIndexPos = upvoteArray.findIndex(
+      (element) => element.post === postKey
+    );
+
+    if (upvoteArrayIndexPos === -1) {
+      downvoteArrayIndexPos = downvoteArray.findIndex(
+        (element) => element.post === postKey
+      );
+    }
+
+    if (upvoteArrayIndexPos !== -1) {
+      return (
+        <div className={styles.upvotes}>
+          <button className={`${styles.upArrow} ${styles.upSelected}`} disabled>
+            &#8679;
+          </button>
+          <span>{posts[postKey].upvotes}</span>
+          <button
+            className={styles.downArrow}
+            onClick={() => {
+              downArrowClick(postKey, upvoteArrayIndexPos);
+            }}
+          >
+            &#8681;
+          </button>
+        </div>
+      );
+    } else if (downvoteArrayIndexPos !== -1) {
+      return (
+        <div className={styles.upvotes}>
+          <button
+            className={styles.upArrow}
+            onClick={() => {
+              upArrowClick(postKey, downvoteArrayIndexPos);
+            }}
+          >
+            &#8679;
+          </button>
+          <span>{posts[postKey].upvotes}</span>
+          <button
+            disabled
+            className={`${styles.downArrow} ${styles.downSelected}`}
+          >
+            &#8681;
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <div className={styles.upvotes}>
+          <button
+            className={styles.upArrow}
+            onClick={() => {
+              upArrowClick(postKey);
+            }}
+          >
+            &#8679;
+          </button>
+          <span>{posts[postKey].upvotes}</span>
+          <button
+            className={styles.downArrow}
+            onClick={() => {
+              downArrowClick(postKey);
+            }}
+          >
+            &#8681;
           </button>
         </div>
       );
@@ -100,11 +239,32 @@ const Homepage = ({ loggedIn, posts }) => {
             {Object.keys(posts).map((postKey) => {
               return (
                 <div className={styles.post} key={postKey}>
-                  <div className={styles.upvotes}>
-                    <button className={styles.upArrow}>&#8679;</button>
-                    <span>{posts[postKey].upvotes}</span>
-                    <button className={styles.downArrow}>&#8681;</button>
-                  </div>
+                  {getUserName() ? (
+                    checkVoteStatus(postKey)
+                  ) : (
+                    <div className={styles.upvotes}>
+                      <button
+                        disabled
+                        className={styles.upArrow}
+                        onClick={() => {
+                          upArrowClick(postKey);
+                        }}
+                      >
+                        &#8679;
+                      </button>
+                      <span>{posts[postKey].upvotes}</span>
+                      <button
+                        disabled
+                        className={styles.downArrow}
+                        onClick={() => {
+                          downArrowClick(postKey);
+                        }}
+                      >
+                        &#8681;
+                      </button>
+                    </div>
+                  )}
+
                   <div className={styles.content}>
                     <div className={styles.postInfo}>
                       <span>r/{posts[postKey].subreddit}</span>
