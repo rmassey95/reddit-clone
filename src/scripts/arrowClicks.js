@@ -1,11 +1,11 @@
 import { addToDb, getUserName } from "./firebase";
 
-function removeDownvote(indxPos, downvoteData) {
+function removeDownvote(indxPos, downvoteData, username) {
   if (downvoteData.length > 1) {
     downvoteData.splice(indxPos, 1);
-    addToDb(`users/${getUserName()}/downvotedPosts/`, downvoteData);
+    addToDb(`users/${username}/downvotedPosts/`, downvoteData);
   } else {
-    addToDb(`users/${getUserName()}/downvotedPosts/`, ["null"]);
+    addToDb(`users/${username}/downvotedPosts/`, ["null"]);
   }
 }
 
@@ -29,12 +29,12 @@ function addUpvote(postKey, userUpvotes) {
   addToDb(`users/${getUserName()}/upvotedPosts/`, userUpvotes);
 }
 
-function removeUpvote(indxPos, upvoteData) {
+function removeUpvote(indxPos, upvoteData, username) {
   if (upvoteData.length > 1) {
     upvoteData.splice(indxPos, 1);
-    addToDb(`users/${getUserName()}/upvotedPosts/`, upvoteData);
+    addToDb(`users/${username}/upvotedPosts/`, upvoteData);
   } else {
-    addToDb(`users/${getUserName()}/upvotedPosts/`, ["null"]);
+    addToDb(`users/${username}/upvotedPosts/`, ["null"]);
   }
 }
 

@@ -26,6 +26,26 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
     navigate(`/edit/${postKey}`);
   };
 
+  const deletePost = (postKey) => {
+    deleteData(`/posts/${postKey}`);
+    Object.keys(users).forEach((user) => {
+      if (user !== "null") {
+        users[user].downvotedPosts.forEach((votedPost, indx) => {
+          if (votedPost.post === postKey) {
+            let downvoteData = users[user].downvotedPosts;
+            removeDownvote(indx, downvoteData, user);
+          }
+        });
+        users[user].upvotedPosts.forEach((votedPost, indx) => {
+          if (votedPost.post === postKey) {
+            let upvoteData = users[user].upvotedPosts;
+            removeUpvote(indx, upvoteData, user);
+          }
+        });
+      }
+    });
+  };
+
   const checkUser = (user, postKey) => {
     if (getUserName() !== null && getUserName() === user) {
       return (
@@ -41,7 +61,7 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
           <button
             className={`${styles.contentLinkBtn} ${styles.deleteBtn}`}
             onClick={() => {
-              deleteData(`/posts/${postKey}`);
+              deletePost(postKey);
             }}
           >
             Delete
@@ -58,7 +78,7 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
 
     if (indxPos !== -1) {
       let downvoteData = users[getUserName()].downvotedPosts;
-      removeDownvote(indxPos, downvoteData);
+      removeDownvote(indxPos, downvoteData, getUserName());
     }
 
     let userUpvotes = users[getUserName()].upvotedPosts;
@@ -75,13 +95,9 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
   };
 
   const downArrowClick = (postKey, indxPos = -1) => {
-    // if (!users.hasOwnProperty(`${getUserName()}`)) {
-    //   addUserToDb(users);
-    // }
-
     if (indxPos !== -1) {
       let upvoteData = users[getUserName()].upvotedPosts;
-      removeUpvote(indxPos, upvoteData);
+      removeUpvote(indxPos, upvoteData, getUserName());
     }
 
     let userDownvotes = users[getUserName()].downvotedPosts;
