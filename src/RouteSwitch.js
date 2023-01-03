@@ -6,6 +6,7 @@ import CreatePost from "./components/CreatePost";
 import Navbar from "./components/Navbar";
 import Post from "./components/Post";
 import EditPost from "./components/EditPost";
+import New from "./components/New";
 import "./styles/index.css";
 import {
   signInUser,
@@ -13,6 +14,7 @@ import {
   signOutUser,
   db,
   addUserToDb,
+  getUserName,
 } from "./scripts/firebase";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { ref, onValue } from "firebase/database";
@@ -73,14 +75,14 @@ const RouteSwitch = () => {
     signInUser();
   };
 
+  useEffect(() => {
+    if (!users.hasOwnProperty(`${getUserName()}`)) {
+      addUserToDb();
+    }
+  }, [users]);
+
   const authStateObserver = (user) => {
     if (user && !loggedIn) {
-      if (
-        !users.hasOwnProperty(`${user.displayName}`) &&
-        Object.keys(users).length > 1
-      ) {
-        addUserToDb();
-      }
       setLoggedIn(true);
     } else if (!user && loggedIn) {
       setLoggedIn(false);
@@ -131,6 +133,30 @@ const RouteSwitch = () => {
         <Route
           path="/edit/:id"
           element={<EditPost posts={posts} getData={getData} />}
+        />
+        <Route
+          path="/new"
+          element={
+            <New
+              loggedIn={loggedIn}
+              posts={posts}
+              getData={getData}
+              users={users}
+              getUsers={getUsers}
+            />
+          }
+        />
+        <Route
+          path="/top"
+          element={
+            <New
+              loggedIn={loggedIn}
+              posts={posts}
+              getData={getData}
+              users={users}
+              getUsers={getUsers}
+            />
+          }
         />
       </Routes>
     </BrowserRouter>

@@ -19,6 +19,7 @@ const CreatePost = ({ loggedIn, getData }) => {
       content: e.target[2].value,
       upvotes: 0,
       datePosted: date.getTime(),
+      comments: null,
     });
     getData();
     navigate("/");

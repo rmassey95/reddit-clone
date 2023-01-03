@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "../styles/Homepage.module.css";
-import hotSymbol from "../assets/imgs/top-symbol.png";
 import newSymbol from "../assets/imgs/new-symbol.png";
 import topSymbol from "../assets/imgs/top-symbol.png";
 import comments from "../assets/imgs/comments.png";
@@ -205,7 +204,7 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
             </div>
 
             <div className={styles.topbar}>
-              <div className={styles.topbarButtonContainer}>
+              {/* <div className={styles.topbarButtonContainer}>
                 <a className={styles.topbarButton} href="/hot">
                   <img
                     className={styles.topbarSymbol}
@@ -214,7 +213,7 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
                   />
                   Hot
                 </a>
-              </div>
+              </div> */}
               <div className={styles.topbarButtonContainer}>
                 <a className={styles.topbarButton} href="/new">
                   <img

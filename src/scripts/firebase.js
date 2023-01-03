@@ -47,7 +47,6 @@ function deleteData(dataPath) {
 }
 
 function addUserToDb() {
-  console.log("ADDED USER");
   let newUser = {};
   newUser = {
     upvotedPosts: ["null"],
