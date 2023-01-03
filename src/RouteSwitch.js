@@ -159,6 +159,18 @@ const RouteSwitch = () => {
             />
           }
         />
+        <Route
+          path="/r/:id"
+          element={
+            <Subreddit
+              loggedIn={loggedIn}
+              posts={posts}
+              getData={getData}
+              users={users}
+              getUsers={getUsers}
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

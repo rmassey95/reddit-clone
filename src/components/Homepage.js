@@ -220,16 +220,6 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
             </div>
 
             <div className={styles.topbar}>
-              {/* <div className={styles.topbarButtonContainer}>
-                <a className={styles.topbarButton} href="/hot">
-                  <img
-                    className={styles.topbarSymbol}
-                    src={hotSymbol}
-                    alt="hot symbol"
-                  />
-                  Hot
-                </a>
-              </div> */}
               <div className={styles.topbarButtonContainer}>
                 <a className={styles.topbarButton} href="/new">
                   <img
@@ -285,7 +275,13 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
 
                   <div className={styles.content}>
                     <div className={styles.postInfo}>
-                      <span>r/{posts[postKey].subreddit}</span>
+                      <span
+                        onClick={() => {
+                          navigate(`/r/${posts[postKey].subreddit}`);
+                        }}
+                      >
+                        r/{posts[postKey].subreddit}
+                      </span>
                       <span className={styles.dot}>&bull;</span>
                       <span className={styles.userDate}>
                         Posted by {posts[postKey].user}{" "}
