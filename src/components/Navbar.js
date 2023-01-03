@@ -1,7 +1,6 @@
 import { React } from "react";
 import styles from "../styles/Navbar.module.css";
 import logo from "../assets/imgs/reddit-logo.png";
-import searchIcon from "../assets/imgs/search-icon.png";
 
 const Navbar = ({ loggedIn, signOut, signIn }) => {
   return (
@@ -13,23 +12,7 @@ const Navbar = ({ loggedIn, signOut, signIn }) => {
             <p className={styles.logoText}>reddit</p>
           </div>
         </a>
-        <div className={styles.searchBarContainer}>
-          <form className={styles.searchForm}>
-            <label htmlFor="search" className={styles.searchLabel}>
-              <img
-                className={styles.searchIconImg}
-                src={searchIcon}
-                alt="Search icon"
-              />
-            </label>
-            <input
-              id="search"
-              type="search"
-              className={styles.searchBar}
-              placeholder="Search Reddit"
-            ></input>
-          </form>
-        </div>
+
         <div>
           {loggedIn ? (
             <button onClick={signOut} type="button" className={styles.loginBtn}>

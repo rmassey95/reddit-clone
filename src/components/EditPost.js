@@ -21,6 +21,10 @@ const EditPost = ({ posts, getData }) => {
 
   const handleSubmit = (e, post) => {
     e.preventDefault();
+
+    const postComments = post.comments || null;
+    console.log(postComments);
+
     set(ref(db, "posts/" + postId), {
       user: post.user,
       title: e.target[0].value,
@@ -28,9 +32,10 @@ const EditPost = ({ posts, getData }) => {
       content: e.target[2].value,
       upvotes: post.upvotes,
       datePosted: post.datePosted,
+      comments: postComments,
     });
     getData();
-    navigate("/");
+    navigate(`/post/${postId}`);
   };
 
   const checkUser = (user) => {

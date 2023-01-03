@@ -8,7 +8,6 @@ import share from "../assets/imgs/share.png";
 import { useNavigate } from "react-router-dom";
 import calcTime from "../scripts/timeCalc.js";
 import { getUserName, deleteData } from "../scripts/firebase";
-import { addUserToDb } from "../scripts/firebase";
 import {
   removeDownvote,
   addUpvote,
@@ -29,7 +28,7 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
   };
 
   const checkUser = (user, postKey) => {
-    if (getUserName() !== null && getUserName === user) {
+    if (getUserName() !== null && getUserName() === user) {
       return (
         <div className={styles.buttonGroup}>
           <button

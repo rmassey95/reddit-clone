@@ -11,7 +11,6 @@
 .post {
   margin-top: 20px;
   display: flex;
-  border: 1px solid white;
   border-radius: 3px;
   width: 624px;
   height: fit-content;
@@ -187,4 +186,25 @@
   color: rgb(0, 110, 211);
   background-color: #e2e7e9;
   border-radius: 5px;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+  margin-right: 16px;
+}
+
+.contentLinkBtn {
+  color: rgb(135, 138, 140);
+  background-color: white;
+  border: none;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.contentLinkBtn:hover {
+  background-color: #e2e7e9;
+  cursor: pointer;
+  border-radius: 2px;
 }

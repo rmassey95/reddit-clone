@@ -5,6 +5,7 @@ import { ref, set } from "firebase/database";
 import uniqid from "uniqid";
 import { getUserName, deleteData } from "../scripts/firebase";
 import calcTime from "../scripts/timeCalc";
+import { useNavigate } from "react-router-dom";
 import {
   removeDownvote,
   addUpvote,
@@ -17,6 +18,7 @@ const Post = ({ posts, loggedIn, getData, users, getUsers }) => {
   const params = useParams();
   const postId = params.id;
   let post = {};
+  const navigate = useNavigate();
 
   for (const postKey in posts) {
     if (postKey === postId) {
@@ -62,6 +64,11 @@ const Post = ({ posts, loggedIn, getData, users, getUsers }) => {
     getData();
   };
 
+  const deletePost = (loc) => {
+    deleteData(loc);
+    navigate("/");
+  };
+
   const checkUser = (user, commentKey) => {
     if (user === getUserName() && !post.comments[commentKey].edit) {
       return (
@@ -78,6 +85,35 @@ const Post = ({ posts, loggedIn, getData, users, getUsers }) => {
             className={styles.editDeleteBtn}
             onClick={() => {
               deleteData(`/posts/${postId}/comments/${commentKey}`);
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      );
+    }
+  };
+
+  const editPost = (postKey) => {
+    navigate(`/edit/${postKey}`);
+  };
+
+  const checkPostUser = (user) => {
+    if (getUserName() !== null && getUserName() === user) {
+      return (
+        <div className={styles.buttonGroup}>
+          <button
+            className={styles.contentLinkBtn}
+            onClick={() => {
+              editPost(postId);
+            }}
+          >
+            Edit
+          </button>
+          <button
+            className={`${styles.contentLinkBtn} ${styles.deleteBtn}`}
+            onClick={() => {
+              deletePost(`/posts/${postId}`);
             }}
           >
             Delete
@@ -251,6 +287,7 @@ const Post = ({ posts, loggedIn, getData, users, getUsers }) => {
           <div className={styles.postContent}>
             <span>{post.content}</span>
           </div>
+          {checkPostUser(post.user)}
         </div>
       </div>
       <div className={styles.commentContainer}>
