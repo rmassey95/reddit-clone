@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Post from "./components/Post";
 import EditPost from "./components/EditPost";
 import New from "./components/New";
+import Top from "./components/Top";
 import "./styles/index.css";
 import {
   signInUser,
@@ -149,7 +150,7 @@ const RouteSwitch = () => {
         <Route
           path="/top"
           element={
-            <New
+            <Top
               loggedIn={loggedIn}
               posts={posts}
               getData={getData}
