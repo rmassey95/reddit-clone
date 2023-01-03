@@ -72,10 +72,6 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
   };
 
   const upArrowClick = (postKey, indxPos = -1) => {
-    // if (!users.hasOwnProperty(`${getUserName()}`)) {
-    //   addUserToDb(users);
-    // }
-
     if (indxPos !== -1) {
       let downvoteData = users[getUserName()].downvotedPosts;
       removeDownvote(indxPos, downvoteData, getUserName());

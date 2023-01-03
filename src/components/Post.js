@@ -275,7 +275,13 @@ const Post = ({ posts, loggedIn, getData, users, getUsers }) => {
         {checkVote()}
         <div className={styles.content}>
           <div className={styles.postInfo}>
-            <span>r/{post.subreddit}</span>
+            <span
+              onClick={() => {
+                navigate(`/r/${post.subreddit}`);
+              }}
+            >
+              r/{post.subreddit}
+            </span>
             <span className={styles.dot}>&bull;</span>
             <span className={styles.userDate}>
               Posted by {post.user} {calcTime(post.datePosted)}
