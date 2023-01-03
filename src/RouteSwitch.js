@@ -12,6 +12,7 @@ import {
   isUserSignedIn,
   signOutUser,
   db,
+  addUserToDb,
 } from "./scripts/firebase";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { ref, onValue } from "firebase/database";
@@ -20,8 +21,21 @@ const RouteSwitch = () => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
 
+  // const getData = async () => {
+  //   const db = getFirestore(app);
+  //   let data = {};
+
+  //   const querySnapshot = await getDocs(collection(db, "posts"));
+  //   querySnapshot.forEach((doc) => {
+  //     // doc.data() is never undefined for query doc snapshots
+  //     data[doc.id] = doc.data();
+  //   });
+  //   return Promise.resolve(data);
+  // };
+
   const getData = () => {
     const data = ref(db, "posts");
+
     onValue(data, (snapshot) => {
       setPosts(snapshot.val());
     });
@@ -35,6 +49,16 @@ const RouteSwitch = () => {
   };
 
   useEffect(() => {
+    // const asyncData = async () => {
+    //   try {
+    //     let postDataFromDB = await getData();
+    //     setPosts(postDataFromDB);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
+
+    // asyncData();
     getData();
     getUsers();
   }, []);
@@ -51,6 +75,12 @@ const RouteSwitch = () => {
 
   const authStateObserver = (user) => {
     if (user && !loggedIn) {
+      if (
+        !users.hasOwnProperty(`${user.displayName}`) &&
+        Object.keys(users).length > 1
+      ) {
+        addUserToDb();
+      }
       setLoggedIn(true);
     } else if (!user && loggedIn) {
       setLoggedIn(false);

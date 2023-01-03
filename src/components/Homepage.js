@@ -54,9 +54,9 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
   };
 
   const upArrowClick = (postKey, indxPos = -1) => {
-    if (!users.hasOwnProperty(`${getUserName()}`)) {
-      addUserToDb(users);
-    }
+    // if (!users.hasOwnProperty(`${getUserName()}`)) {
+    //   addUserToDb(users);
+    // }
 
     if (indxPos !== -1) {
       let downvoteData = users[getUserName()].downvotedPosts;
@@ -77,9 +77,9 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
   };
 
   const downArrowClick = (postKey, indxPos = -1) => {
-    if (!users.hasOwnProperty(`${getUserName()}`)) {
-      addUserToDb(users);
-    }
+    // if (!users.hasOwnProperty(`${getUserName()}`)) {
+    //   addUserToDb(users);
+    // }
 
     if (indxPos !== -1) {
       let upvoteData = users[getUserName()].upvotedPosts;
@@ -241,7 +241,9 @@ const Homepage = ({ loggedIn, posts, getData, users, getUsers }) => {
             {Object.keys(posts).map((postKey) => {
               return (
                 <div className={styles.post} key={postKey}>
-                  {loggedIn ? (
+                  {loggedIn &&
+                  Object.keys(users).length > 0 &&
+                  users[getUserName()] ? (
                     checkVoteStatus(postKey)
                   ) : (
                     <div className={styles.upvotes}>

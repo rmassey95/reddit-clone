@@ -17,7 +17,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 
 async function signInUser() {
@@ -46,7 +46,8 @@ function deleteData(dataPath) {
   remove(ref(db, dataPath));
 }
 
-function addUserToDb(users) {
+function addUserToDb() {
+  console.log("ADDED USER");
   let newUser = {};
   newUser = {
     upvotedPosts: ["null"],
@@ -68,4 +69,5 @@ export {
   deleteData,
   addUserToDb,
   addToDb,
+  app,
 };
